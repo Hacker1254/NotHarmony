@@ -85,7 +85,7 @@ static object MethodPatch(Class _instance, ref string str){ // needs to be objec
 PatchHandler.Detour(typeof(Class).GetMethod(nameof(Class.StaticMethodOneParam)), MethodPatch);
 
 static object MethodPatch(ref string str){ // needs to be object
-     if (str.Contains("keyWord")) return 124; 
+     if (str.Contains("keyWord")) return 124; // The method return is an Int 
      return null; // Don't Block call/ continue normally 
      return true; // Don't block call
      return false; // Block Call

@@ -3,6 +3,9 @@ tbh its prob simple i just don't know, ValueTypes just are not supported and it 
 also some stuff just doesn't patch
 and it needs some qol patch/ bug fix stuff
 
+
+# Incomplete!!
+
 This is a tool i made for use in HEXEDWARE but honestly can be repurposed 
 
 This allows you to hook onto (Currently ONLY) generated Il2Cpp methods, and Props
@@ -12,6 +15,7 @@ Supported -
 * Auto Type conversion For Params
 * Patching Return Types
 * Ref/ In-out for Il2CppBaseObjects
+* Native IntPtr methods
 
 
 Upcomming - 

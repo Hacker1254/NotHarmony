@@ -306,6 +306,7 @@ public class PatchHandler {
                     case TypeCode.Single: return (float)value;
                     case TypeCode.Double: return (double)value;
                     case TypeCode.Object: return value; // custom struct
+                    case TypeCode.Boolean: return value == 1; // custom struct
                     default:
                         Logs.Log($"Unknown TypeCode {targetType.FullName}({value}) {Enum.GetName(typeof(TypeCode), from)}");
                         break;

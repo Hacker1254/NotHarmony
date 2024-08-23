@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  
+  
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;C:\Users\Braylon\Documents\HEXED\Settings\UnityLoader\vrchat\Runtime&quot; /Y /I" />
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;C:\Users\Braylon\source\repos\WCv2\WebServer\bin\Debug\net8.0\Data\UserLibs&quot; /Y /I" />
+  </Target>
+
+  
+  
+  <ItemGroup>
+    <Reference Include="ConsoleTool">
+      <HintPath>..\..\..\..\Documents\HEXED\Settings\UnityLoader\vrchat\Runtime\ConsoleTool.dll</HintPath>
+    </Reference>
+    <Reference Include="CoreRuntime">
+      <HintPath>..\..\..\..\Documents\HEXED\Settings\UnityLoader\vrchat\Runtime\CoreRuntime.dll</HintPath>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>..\..\..\..\Documents\HEXED\Settings\UnityLoader\vrchat\Runtime\Il2CppInterop.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+</Project>

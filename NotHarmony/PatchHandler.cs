@@ -29,7 +29,7 @@ public class PatchHandler {
         const int EXT_StructHideReturn = 111;
 
         internal bool isStatic => Target.IsStatic;
-        internal bool hasReturn => Target.ReturnType != typeof(void);
+        internal bool hasReturn { get; private set; }
 
         internal bool GeneralBlock { get; private set; }
         internal bool HasPost { get; private set; }
@@ -46,11 +46,12 @@ public class PatchHandler {
         PatchCallBackType.INSTANCE_RETURN _instanceReturnCallback;
         PatchCallBackType.STATIC_RETURN _staticReturnCallback;
 
-        List<object> PARAMSTORAGE = [];
         ParameterInfo[] Parms;
 
 
         internal PatchManager(MethodInfo target) {
+            hasReturn = target.ReturnType != typeof(void) && target.ReturnType != typeof(bool);
+
             Target = target;
             TargetPointer = *(IntPtr*)(IntPtr)InteropUtils.GetIl2CppMethodInfoPointerFieldForGeneratedMethod(target).GetValue(null);
             Parms = Target.GetParameters();
@@ -127,8 +128,7 @@ public class PatchHandler {
         IntPtr[] _invokeP;
 
         object ShouldCallback(ref IntPtr _instance, ref IntPtr _param1, ref IntPtr _param2, ref IntPtr _param3, ref IntPtr _param4, ref IntPtr _param5, ref IntPtr _param6, ref IntPtr _param7, ref IntPtr _param8, ref IntPtr _param9, ref IntPtr _param10, ref IntPtr _param11, ref IntPtr _param12) {
-            PARAMSTORAGE.Clear();
-
+            List<object> PARAMSTORAGE = [];
 
             if (!GeneralBlock) { // incase someone just wants to block something and not parse types
                 try {
@@ -167,6 +167,8 @@ public class PatchHandler {
             skipObjects = null;
             _invokeParams = [.. PARAMSTORAGE];
             _invokeP = [_instance, _param1, _param2, _param3, _param4, _param5, _param6, _param7, _param8, _param9, _param10, _param11, _param12];
+
+            PARAMSTORAGE.Clear();
 
             // Call the methods patching this... (before callback to game) this will affect the _invokePointers, skipObjects, _invokeParams & _invokeP
             object returnData = CallDelegates();
@@ -258,7 +260,7 @@ public class PatchHandler {
                     }
                     
                 } catch (TargetParameterCountException r) {
-                    Logs.Error($"[{call?.Delegate?.Method?.GetParameters().Length} - {_invokeParams.Length} ({skipObjects?.Length})]Error During Delgate Invoke Call Params {GetParamInfo(call?.Delegate?.Method?.GetParameters(), Name: call?.Delegate?.Method?.Name)}\n_invokeParams ({_invokeParams.Length}) [{string.Join(" ---- ", PARAMSTORAGE)}]", r);
+                    Logs.Error($"[{call?.Delegate?.Method?.GetParameters().Length} - {_invokeParams.Length} ({skipObjects?.Length})]Error During Delgate Invoke Call Params {GetParamInfo(call?.Delegate?.Method?.GetParameters(), Name: call?.Delegate?.Method?.Name)}\n_invokeParams ({_invokeParams.Length}) [{string.Join(" ---- ", _invokeParams)}]", r);
                 } catch (Exception e) {
                     Logs.Error($"Error During Patch at {call?.Delegate?.Method?.DeclaringType?.FullName}::{call?.Delegate?.Method?.Name}, Not Passing to Il2cpp Runtime {e?.InnerException?.ToString() ?? $"{this} - {e}"}"); // InnerException excludes the call infomation from this class, full error if no InnerException
                 }
